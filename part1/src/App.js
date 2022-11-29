@@ -2,6 +2,7 @@ import { useState } from "react";
 import Person from "./components/Person";
 import PersonForm from "./components/PersonForm";
 import SearchFilter from "./components/SearchFilter";
+import ListOfPeople from "./components/ListOfPeople";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -65,15 +66,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <div>
-        {persons
-          .filter((person) => {
-            return person.name.includes(filteredPeople);
-          })
-          .map((person) => (
-            <Person name={person.name} key={person.id} number={person.number} />
-          ))}
-      </div>
+      <ListOfPeople persons={persons} filteredPeople={filteredPeople} />
     </div>
   );
 };
