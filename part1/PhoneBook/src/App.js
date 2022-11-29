@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Person from "./components/Person";
 import PersonForm from "./components/PersonForm";
 import SearchFilter from "./components/SearchFilter";
 import ListOfPeople from "./components/ListOfPeople";
