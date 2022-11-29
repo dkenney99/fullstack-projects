@@ -1,76 +1,78 @@
 import { useState } from "react";
-
-const Button = (props) => {
-  return (
-    <div>
-      <button onClick={props.handleClick}>{props.text}</button>
-    </div>
-  );
-};
-
-const StatisticsLine = (props) => {
-  const text = props.text;
-  const value = props.value;
-
-  return (
-    <div>
-      <p>
-        {text} {value}
-      </p>
-    </div>
-  );
-};
-
-const Statistics = (props) => {
-  const good = props.good;
-  const neutral = props.neutral;
-  const bad = props.bad;
-
-  if (good == 0 && bad == 0 && neutral == 0) {
-    return (
-      <div>
-        <h1>statistics</h1>
-        <p>No feedback given</p>
-      </div>
-    );
-  } else {
-    return (
-      <div>
-        <h1>statistics</h1>
-        <StatisticsLine text="good" value={good} />
-        <StatisticsLine text="neutral" value={neutral} />
-        <StatisticsLine text="bad" value={bad} />
-        <StatisticsLine text="all" value={good + neutral + bad} />
-        <StatisticsLine
-          text="average"
-          value={(good - bad) / (good + neutral + bad)}
-        />
-        <StatisticsLine
-          text="positive"
-          value={(good / (good + neutral + bad)) * 100}
-        />
-      </div>
-    );
-  }
-};
+import Person from "./components/Person";
 
 const App = () => {
-  // save clicks of each button to its own state
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "040-123456", id: 1 },
+    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
+    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
+    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
+  ]);
+  const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
+  const [filteredPeople, setFilteredPeople] = useState("");
 
-  const increaseGood = () => setGood(good + 1);
-  const increaseNeutral = () => setNeutral(neutral + 1);
-  const increaseBad = () => setBad(bad + 1);
+  const addName = (event) => {
+    event.preventDefault();
+
+    const personObject = {
+      name: newName,
+      id: persons.length + 1,
+      number: newNumber,
+    };
+
+    persons.forEach((person) => {
+      if (person.name.includes(newName)) {
+        return alert(`${newName} is already added to the phonebook`);
+      } else {
+        setPersons(persons.concat(personObject));
+        setNewName("");
+        setNewNumber("");
+      }
+    });
+  };
+
+  const handleNewName = (event) => {
+    setNewName(event.target.value);
+  };
+
+  const handleNewNumber = (event) => {
+    setNewNumber(event.target.value);
+  };
+
+  const handleFilter = (event) => {
+    setFilteredPeople(event.target.value);
+  };
 
   return (
     <div>
-      <h1>give feedback</h1>
-      <Button handleClick={increaseGood} text="good" />
-      <Button handleClick={increaseNeutral} text="neutral" />
-      <Button handleClick={increaseBad} text="bad" />
-      <Statistics good={good} neutral={neutral} bad={bad} />
+      <h2>Phonebook</h2>
+      <form onSubmit={addName}>
+        <div>
+          filter shown with{" "}
+          <input onChange={handleFilter} value={filteredPeople} />
+        </div>
+        <div>
+          <h2>add a new</h2>
+          name: <input onChange={handleNewName} value={newName} />
+        </div>
+        <div>
+          number: <input onChange={handleNewNumber} value={newNumber} />
+        </div>
+        <div>
+          <button type="submit">add</button>
+        </div>
+      </form>
+      <h2>Numbers</h2>
+      <div>
+        {persons
+          .filter((person) => {
+            return person.name.includes(filteredPeople);
+          })
+          .map((person) => (
+            <Person name={person.name} key={person.id} number={person.number} />
+          ))}
+      </div>
     </div>
   );
 };
