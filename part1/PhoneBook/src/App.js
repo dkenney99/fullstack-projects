@@ -2,38 +2,44 @@ import { useState, useEffect } from "react";
 import PersonForm from "./components/PersonForm";
 import SearchFilter from "./components/SearchFilter";
 import ListOfPeople from "./components/ListOfPeople";
-import axios from "axios";
+import peopleService from "./services/peopleServices";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filteredPeople, setFilteredPeople] = useState("");
+  const [addedMessage, setAddedMessage] = useState("");
 
-  useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("promise fulfilled");
-      setPersons(response.data);
-    });
-  }, []);
+  const Hook = () =>
+    useEffect(() => {
+      peopleService.getAll().then((peopleData) => setPersons(peopleData));
+    }, []);
+
+  Hook();
 
   const addName = (event) => {
     event.preventDefault();
 
     const personObject = {
       name: newName,
-      id: persons.length + 1,
       number: newNumber,
     };
+    peopleService.create(personObject).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
+      setAddedMessage(`${returnedPerson.name}  was added`);
+      setNewName("");
+      setNewNumber("");
+      setTimeout(() => {
+        setAddedMessage("");
+      }, 5000);
+    });
+  };
 
-    persons.forEach((person) => {
-      if (person.name.includes(newName)) {
-        return alert(`${newName} is already added to the phonebook`);
-      } else {
-        setPersons(persons.concat(personObject));
-        setNewName("");
-        setNewNumber("");
-      }
+  const deleteName = (id) => {
+    peopleService.remove(id).then((returnedObject) => {
+      setPersons([...returnedObject]);
     });
   };
 
@@ -52,6 +58,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={addedMessage} />
       <form onSubmit={addName}>
         <SearchFilter
           handleFilter={handleFilter}
@@ -68,7 +75,11 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      <ListOfPeople persons={persons} filteredPeople={filteredPeople} />
+      <ListOfPeople
+        persons={persons}
+        filteredPeople={filteredPeople}
+        deleteButton={deleteName}
+      />
     </div>
   );
 };
