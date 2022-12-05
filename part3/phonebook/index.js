@@ -1,7 +1,9 @@
 const { response } = require("express")
 const express = require("express")
+const morgan = require('morgan')
 const app = express()
 
+app.use(morgan('tiny'));
 app.use(express.json())
 
 let persons = [
@@ -67,26 +69,36 @@ app.delete("/api/persons/:id", (request,response) => {
 })
 
 const generateId = () => {
-    const maxId = persons.length > 0 
-    ? Math.max(...persons.map(person => person.id)) 
-    : 0
-
-    return maxId + 1
+    return Math.floor(Math.random() * 10000);
 }
 
 app.post("/api/persons", (request, response) => {
     const body = request.body;
+    const duplicateConfirmation = (name) => {
+        let checker = false;
+        persons.forEach(person => {
+            if (name == person.name) {
+                checker = true;
+            }
+        })
+        return checker;
+    }
 
-    if (!body.content) {
+    if (!body.name || !body.number) {
         return response.status(400).json({
-            error: "content missing"
+            error: "Name or number is missing"
+        })
+    }
+
+    if (duplicateConfirmation(body.name)) {
+        return response.status(400).json({
+            error: "Duplicate name"
         })
     }
 
     const person = {
-        content: body.content,
-        important: body.important || false,
-        date: new Date(),
+        name: body.name,
+        number: body.number,
         id: generateId(),
     }
 
@@ -94,3 +106,4 @@ app.post("/api/persons", (request, response) => {
 
     response.json(persons)
 })
+
