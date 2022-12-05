@@ -2,7 +2,9 @@ const { response } = require("express");
 const express = require("express");
 const morgan = require("morgan");
 const app = express();
+const cors = require("cors");
 
+app.use(cors());
 app.use(morgan("tiny"));
 app.use(express.json());
 
@@ -42,11 +44,6 @@ app.get("/info", (request, response) => {
 
 app.get("/api/persons", (request, response) => {
   response.json(persons);
-});
-
-const PORT = 3001;
-app.listen(PORT, () => {
-  console.log(`Server is running on ${PORT}`);
 });
 
 app.get("/api/persons/:id", (request, response) => {
@@ -104,4 +101,9 @@ app.post("/api/persons", (request, response) => {
   persons.concat(person);
 
   response.json(persons);
+});
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

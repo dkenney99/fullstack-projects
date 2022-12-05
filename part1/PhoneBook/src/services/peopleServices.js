@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseUrl = "http://localhost:3001/persons";
+const baseUrl = "http://localhost:3001/api/persons";
 
 const getAll = () => {
   console.log("people data pulled from DB");
@@ -20,8 +20,4 @@ const remove = (personId) => {
   return request.then((response) => response.data);
 };
 
-export default {
-  getAll: getAll,
-  create: create,
-  remove: remove,
-};
+export default { getAll, create, remove };

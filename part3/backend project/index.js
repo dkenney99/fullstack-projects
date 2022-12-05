@@ -2,8 +2,9 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 
-app.use(cors());
 app.use(express.json());
+app.use(express.static("build"));
+app.use(cors());
 
 let notes = [
   {
@@ -27,16 +28,11 @@ let notes = [
 ];
 
 app.get("/", (request, response) => {
-  response.send("<h1>Hello World!</h1>");
+  response.send("<h1>Notes App/</h1>");
 });
 
 app.get("/api/notes", (request, response) => {
   response.json(notes);
-});
-
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
 });
 
 app.get("/api/notes/:id", (request, response) => {
@@ -81,4 +77,9 @@ app.post("/api/notes", (request, response) => {
   notes = notes.concat(note);
 
   response.json(note);
+});
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
