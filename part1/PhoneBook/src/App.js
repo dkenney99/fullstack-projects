@@ -6,7 +6,9 @@ import peopleService from "./services/peopleServices";
 import Notification from "./components/Notification";
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "858-123-4264" },
+  ]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filteredPeople, setFilteredPeople] = useState("");
@@ -57,7 +59,7 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h2 className="text-3xl font-bold underline">Phonebook</h2>
       <Notification message={addedMessage} />
       <form onSubmit={addName}>
         <SearchFilter
@@ -71,10 +73,15 @@ const App = () => {
           newNumber={newNumber}
         />
         <div>
-          <button type="submit">add</button>
+          <button
+            className="mb-5 bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
+            type="submit"
+          >
+            add
+          </button>
         </div>
       </form>
-      <h2>Numbers</h2>
+      <h2 className="text-3xl font-bold underline">Numbers</h2>
       <ListOfPeople
         persons={persons}
         filteredPeople={filteredPeople}

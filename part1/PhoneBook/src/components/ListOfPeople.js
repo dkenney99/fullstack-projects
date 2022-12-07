@@ -7,7 +7,7 @@ const ListOfPeople = (props) => {
   const deleteButton = props.deleteButton;
 
   return (
-    <div>
+    <div className="">
       {persons
         .filter((person) => {
           return person.name.includes(filteredPeople);

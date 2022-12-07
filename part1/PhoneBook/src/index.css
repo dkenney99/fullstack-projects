@@ -1,3 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: rgb(253, 253, 253);
+  text-align: center;
+  margin-top: 50px;
+}
+
 .added {
   color: green;
   background: lightgrey;
@@ -9,6 +19,10 @@
 }
 
 h2 {
-  color: blueviolet;
-  font-style: italic;
+  color: rgb(240, 131, 68);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.names {
+  font-size: 50px;
 }
